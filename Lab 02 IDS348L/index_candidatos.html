@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <h1>Esta app es para votar por tu candidato favorito</h1>
+
+    <h2>Selecciona un candidato a la presidencia:</h2>
+    <form action="mostrar_candidatos.cshtml" method="post">
+
+        <label>
+            <input type="radio" name="candidato" value="1">
+            Luis Abinader
+        </label><br>
+
+        <label>
+            <input type="radio" name="candidato" value="2">
+            Abel Martinez
+        </label><br>
+
+        <label>
+            <input type="radio" name="candidato" value="3">
+            Leonel Fernandez
+        </label><br>
+
+        <input type="submit" value="Mostrar candidato seleccionado">
+    </form>
+
+</body>
+</html>

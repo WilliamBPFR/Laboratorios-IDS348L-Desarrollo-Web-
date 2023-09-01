@@ -1,0 +1,52 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    @{ 
+        System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["Cn"].ConnectionString);
+        connection.Open();
+
+        System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand();
+        command.Connection = connection;
+        command.CommandType = System.Data.CommandType.StoredProcedure;
+        command.CommandText = "sp_candidatos";
+        command.Parameters.AddWithValue("@candidato", int.Parse(Request["candidato"]));
+
+
+        System.Data.SqlClient.SqlParameter total_luis = new System.Data.SqlClient.SqlParameter();
+        System.Data.SqlClient.SqlParameter total_abel = new System.Data.SqlClient.SqlParameter();
+        System.Data.SqlClient.SqlParameter total_leonel = new System.Data.SqlClient.SqlParameter();
+
+        total_abel.DbType = System.Data.DbType.Int64;
+        total_abel.Direction = System.Data.ParameterDirection.Output;
+        total_abel.ParameterName = "@VotosAbel";
+
+        total_leonel.DbType = System.Data.DbType.Int64;
+        total_leonel.Direction = System.Data.ParameterDirection.Output;
+        total_leonel.ParameterName = "@VotosLeonel";
+
+        total_luis.DbType = System.Data.DbType.Int64;
+        total_luis.Direction = System.Data.ParameterDirection.Output;
+        total_luis.ParameterName = "@VotosAbinader";
+
+        command.Parameters.Add(total_leonel);
+        command.Parameters.Add(total_abel);
+        command.Parameters.Add(total_luis);
+        var respuesta = command.ExecuteNonQuery();
+    }
+    <div>
+        <h1>TOTALES DE LOS CANDIDATOS:</h1><br /><br />
+        <h2>Abinader: @total_luis.Value</h2><br /><br />
+        <h2>Abel: @total_abel.Value</h2><br /><br />
+        <h2>Leonel: @total_leonel.Value</h2><br /><br />
+    </div>
+</body>
+</html>

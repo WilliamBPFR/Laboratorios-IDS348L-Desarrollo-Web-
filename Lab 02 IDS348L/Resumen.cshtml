@@ -1,0 +1,50 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    @{
+        System.Data.SqlClient.SqlConnection connection= new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["Cn"].ConnectionString);
+        connection.Open();
+
+        System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand();
+        command.Connection = connection;
+        command.CommandType = System.Data.CommandType.StoredProcedure;
+        command.CommandText = "sp_picoduarte";
+        command.Parameters.AddWithValue("@TipoDoc", Request["tipodoc"]);
+        command.Parameters.AddWithValue("@Documento", Request["documento"]);
+        command.Parameters.AddWithValue("@Nombres", Request["names"]);
+        command.Parameters.AddWithValue("@Apellidos", Request["apellidos"]);
+        string fecha_nac = Request["fechanac"];
+        command.Parameters.AddWithValue("@FechaNacimiento", DateTime.Parse(fecha_nac));
+        command.Parameters.AddWithValue("@montopagado", Request["montopagar"]);
+        command.Parameters.AddWithValue("@notamedica", Request["notamedica"]);
+
+        System.Data.SqlClient.SqlParameter parametro_monto_total = new System.Data.SqlClient.SqlParameter();
+        System.Data.SqlClient.SqlParameter parametro_personas_total = new System.Data.SqlClient.SqlParameter();
+
+        parametro_monto_total.DbType = System.Data.DbType.Decimal;
+        parametro_monto_total.Direction = System.Data.ParameterDirection.Output;
+        parametro_monto_total.ParameterName = "@TotalRecaudado";
+
+        parametro_personas_total.DbType = System.Data.DbType.Int64;
+        parametro_personas_total.Direction = System.Data.ParameterDirection.Output;
+        parametro_personas_total.ParameterName = "@PersonasRegistradas";
+        command.Parameters.Add(parametro_monto_total);
+        command.Parameters.Add(parametro_personas_total);
+        var respuesta = command.ExecuteNonQuery();
+    }
+    <div>
+        <h1>Total Generado: @parametro_monto_total.Value</h1><br />
+        <h1>Personas Inscritas: @parametro_personas_total.Value</h1>
+
+    </div>
+</body>
+</html>
